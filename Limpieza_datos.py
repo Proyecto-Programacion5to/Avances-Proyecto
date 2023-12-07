@@ -44,7 +44,8 @@ class LimpiadorCSV:
     def guardar_csv(self, archivo_salida):
         self.df.to_csv(archivo_salida, index=False)
 
-#Limpieza a incluir: valores en 0 y cambiar el nombre de la columna Forma de pago a pago mensual
+#Limpieza a incluir: valores en 0 y cambiar el nombre de la columna Forma de pago a pago mensual.
+#Limpiar valores str
 
 archivo_csv = 'Datasets/ClaroShop.csv'
 limpieza = LimpiadorCSV(archivo_csv)
