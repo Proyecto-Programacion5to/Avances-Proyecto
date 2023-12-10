@@ -101,8 +101,57 @@ def render_page_content(pathname):
             graph
         ])
     elif pathname == "/page-2":
+        def loadData(filename):
+            data = pd.read_csv(filepath_or_buffer=data_query2, sep=",")
+            data = data.iloc[:, 1:]
+            return data
 
+        data = loadData(data_query2)
 
+        clasificacion = data['Clsificacion'].unique()
+        clasificacion.sort()
+        options = [{'label': c, 'value': c} for c in clasificacion]
+
+        return html.Div([
+            html.H1('"Descuento de los Producto por Clasificación"', style={'color': '#008080', 'textAlign': 'center'}),
+            html.Br(),
+            html.H2("Análisis:", style={'color': '#2F4F4F'}),
+            html.P(
+                "Esta gráfica, que es complementaria a la primera, nos permite observar específicamente la cantidad de descuento (en MXN) que Claro Shop le aplica "
+                "a cada uno de sus productos. Para la competencia esta información le ayudará a ajustar sus estrategias de fijación de "
+                "precios, ofreciendo productos similares a precios más atractivos o adaptar sus ofertas para competir más efectivamente en el mercado.",
+                style={'text-align': 'justify'}),
+            html.Br(),
+            html.Div(
+                dcc.Dropdown(
+                    id='clasification_picker',
+                    options=options,
+                    value='celulares-y-telefonia-li'
+                ),
+                style={'width': '35%'}
+            ),
+            dcc.Graph(
+                id='descuentos_product',
+                config={'displayModeBar': False}
+            )
+        ])
+    tickFont = {'size': 9, 'color': 'rgb(30,30,30)'}
+
+    @app.callback(Output(component_id='descuentos_product', component_property='figure'),
+                  [Input(component_id='clasification_picker', component_property='value')])
+    def update_chart(selected_clasification):
+        filter_dt = data[data["Clsificacion"] == selected_clasification]
+        fig = go.Figure(data=[go.Scatter(
+            x=filter_dt['Producto'],
+            y=filter_dt['Descuento'],
+            mode='lines+markers',
+            marker=dict(color='firebrick')
+        )])
+        fig.update_layout(title='Descuentos por producto {}'.format(selected_clasification),
+                          xaxis=dict(tickangle=-90, ticktext=filter_dt['Producto'], tickfont=tickFont,
+                                     type='category'))
+
+        return fig
 
 
 """
