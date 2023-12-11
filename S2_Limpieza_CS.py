@@ -41,17 +41,12 @@ class LimpiadorCSV:
             return valor
         self.df['Forma de pago'] = self.df['Forma de pago'].apply(lipieza_formaspago)
 
+    def precio_anterior_cero(self):
+        self.df = self.df[self.df['Precio Anterior'] > 1]
+
+    def cambio_nombre(self):
+        self.df = self.df.rename(columns={'Forma de pago': 'Pago Mensual'})
+
     def guardar_csv(self, archivo_salida):
         self.df.to_csv(archivo_salida, index=False)
 
-
-
-archivo_csv = 'Datasets/ClaroShop.csv'
-limpieza = LimpiadorCSV(archivo_csv)
-limpieza.limpieza_duplicados()
-limpieza.limpieza_nulos()
-limpieza.limpieza_de_precio()
-limpieza.extraer_valores_numericos('Forma de pago')
-limpieza.limpiar_forma_de_pago()
-limpieza.signo_de_pesos()
-limpieza.guardar_csv('Limpieza_ClaroShop.csv')
