@@ -5,7 +5,7 @@ from dash import dcc, html
 from S4_Graficos_CS import graph1, data
 import plotly.graph_objs as go
 from dash.dependencies import Input, Output
-from ArchivoConstantes_CS import data_query2
+from PF_ArchivoConstantes_CS import data_query2
 
 
 """"
